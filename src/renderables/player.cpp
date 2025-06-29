@@ -50,8 +50,6 @@ void Player::init(GameState& gameState, glm::vec2 position, glm::vec2 sizePercen
 -----~~~~~=====<<<<<{_UPDATES_}>>>>>=====~~~~~-----
 */
 void Player::update() {
-    updateTextureCoords();
-
     // decceleration x
 	if (noX_ && !stoppedX_) {
         if (velocity_.x < 0.f) {
@@ -129,6 +127,18 @@ void Player::update() {
 	// update position based on velocity
 	position_ += glm::vec2(velocity_.x * gameState_->simulationTimeDelta, velocity_.y * gameState_->simulationTimeDelta);
 
+    // add position to animation counter
+    animationDistance_ += abs(velocity_.y * gameState_->simulationTimeDelta) + abs(velocity_.x * gameState_->simulationTimeDelta);
+    if (animationDistance_ > PLAYER_ANIMATION_RESET) {
+        if (textureStage_ == 3) {
+            textureStage_ = 0;
+        }
+        else {
+            textureStage_++;
+        }
+        animationDistance_ = 0.f;
+    }
+
     // edge of screen collision x
     if (position_.x <= -1.f || position_.x >= (1.f - (sizePercent_.x * 2) * gameState_->spriteScale)) { 
         // reset velocity and acceleration
@@ -162,6 +172,9 @@ void Player::update() {
     scale();
 
 	gameState_->needTriangleRemap = true;
+
+    // update determines the "stage" of animation based on amount moved 
+    updateTextureCoords();
 }
 
 void Player::updateTextureCoords() {
@@ -192,11 +205,33 @@ void Player::updateTextureCoords() {
         textureMirrored_ = true;
         break;
     case RIGHT:
-        texturePosition_ = {0.5f, 0.f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = {0.5f, 0.f};
+            break;
+        case 1:
+            texturePosition_ = {0.25f, 0.25f};
+            break;
+        case 3:
+            texturePosition_ = {0.5f, 0.25f};
+            break;
+        }
         textureMirrored_ = false;
         break;
     case LEFT:
-        texturePosition_ = {0.5f, 0.f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = {0.5f, 0.f};
+            break;
+        case 1:
+            texturePosition_ = {0.25f, 0.25f};
+            break;
+        case 3:
+            texturePosition_ = {0.5f, 0.25f};
+            break;
+        }
         textureMirrored_ = true;
         break;
     case STOPPED:

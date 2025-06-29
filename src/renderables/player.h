@@ -40,6 +40,8 @@ private:
     glm::vec2 texturePosition_ = {0.f,0.f};
     bool textureMirrored_ = false;
     MovementState movementState_ = STOPPED;
+    int textureStage_ = 0;
+    float animationDistance_ = 0.f;
 
     glm::vec2 acceleration_ = { 0.f, 0.f };
 	glm::vec2 velocity_ = { 0.f, 0.f };

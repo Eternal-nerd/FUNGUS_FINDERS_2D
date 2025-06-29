@@ -35,11 +35,9 @@ const uint32_t HEIGHT = 800;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 const int MAX_QUADS = 2048;
 const int MAX_LINES = 256;
-const float PLAYER_ACCELERATION = 1.f; 
-const float PLAYER_DECELERATION = 3.f;
-const float PLAYER_GRAVITY = 50.f;
-const float PLAYER_JUMP_VELOCITY = 3.f;
-const float MAX_PLAYER_VELOCITY = 3.f;
+const float PLAYER_ACCELERATION = 0.25f; 
+const float PLAYER_DECELERATION = 2.f;
+const float MAX_PLAYER_VELOCITY = 0.5f;
 
 
 // GAME VARIABLES

@@ -1106,9 +1106,9 @@ void Engine::drawCalls(VkCommandBuffer commandBuffer) {
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indexCount_), 1, 0, 0, 0);
 
     // DRAW LINES
-    vkCmdSetPrimitiveTopology(commandBuffer, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
-    vkCmdBindVertexBuffers(commandBuffer, 0, 1, &lineVertexBuffer_, &offsets);
-    vkCmdDraw(commandBuffer, static_cast<uint32_t>(linePointCount_), 1, 0, 0);
+    //vkCmdSetPrimitiveTopology(commandBuffer, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    //vkCmdBindVertexBuffers(commandBuffer, 0, 1, &lineVertexBuffer_, &offsets);
+    //vkCmdDraw(commandBuffer, static_cast<uint32_t>(linePointCount_), 1, 0, 0);
 }
 
 void Engine::submitVkCommandBuffer(VkCommandBuffer commandBuffer) {

@@ -30,18 +30,17 @@ const bool enableValidationLayers = true;
 
 // misc. global variables
 const int FPS_MEASURE_INTERVAL = 500;
-const uint32_t WIDTH = 1600;
+const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 800;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 const int MAX_QUADS = 2048;
 const int MAX_LINES = 256;
-const float PLAYER_ACCELERATION = 0.25f; 
-const float PLAYER_DECELERATION = 2.f;
-const float MAX_PLAYER_VELOCITY = 0.5f;
+const float PLAYER_ACCELERATION = 2.f; 
+const float PLAYER_DECELERATION = 3.f;
+const float MAX_PLAYER_VELOCITY = 1.f;
 
 
 // GAME VARIABLES
-
 const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME };
 
 const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
@@ -108,6 +107,19 @@ struct SwapChainSupportDetails {
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
 };
+
+// sprite enums
+typedef enum MovementState {
+    FORWARD = 0,
+    FORWARD_RIGHT = 1,
+    RIGHT = 2,
+    DOWN_RIGHT = 3,
+    DOWN = 4,
+    DOWN_LEFT = 5,
+    LEFT = 6,
+    FORWARD_LEFT = 7,
+    STOPPED = 8,
+} MovementState;
 
 // for filtering sprites to be shown
 typedef enum GameScreens {

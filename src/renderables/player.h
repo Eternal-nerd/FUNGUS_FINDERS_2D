@@ -22,6 +22,7 @@ public:
 
 private:
 	// -----~~~~~=====<<<<<{_METHODS_}>>>>>=====~~~~~-----
+    void updateTextureCoords();
 
 	// -----~~~~~=====<<<<<{_VARIABLES_}>>>>>=====~~~~~-----
 	std::array<Vertex, 4> vertices_{};
@@ -34,6 +35,12 @@ private:
     bool stoppedY_ = false;
     
 	int textureIndex_ = -1;
+
+    float textureOffset_ = 0.f;
+    glm::vec2 texturePosition_ = {0.f,0.f};
+    bool textureMirrored_ = false;
+    MovementState movementState_ = STOPPED;
+
     glm::vec2 acceleration_ = { 0.f, 0.f };
 	glm::vec2 velocity_ = { 0.f, 0.f };
 	glm::vec2 position_ = { 0.f, 0.f };

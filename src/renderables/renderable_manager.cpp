@@ -15,19 +15,14 @@ void RenderableManager::init(GameState& gameState, AssetManager& assetManager) {
 void RenderableManager::generateWorld() {
 	log(name_ + __func__, "generating game world");
 
-	// sky
-	Rectangle sky;
-	sky.create(*gameState_, GAMEPLAY, false, "sky", { -1.f, -1.f }, { 1.f, 1.f }, assetManager_->getTextureIndex("../res/img/png/sky2.png"));
-	rectangles_.push_back(sky);
-
-	// floor
-	Rectangle floor;
-	floor.create(*gameState_, GAMEPLAY, true, "floor", { -1.f, 0.75f }, { 1.f, 0.125f }, assetManager_->getTextureIndex("../res/img/png/floor.png"));
-	rectangles_.push_back(floor);
-
+	// land
+	Rectangle land;
+	land.create(*gameState_, GAMEPLAY, false, "land", { -1.f, -1.f }, { 1.f, 1.f }, assetManager_->getTextureIndex("../res/img/png/floor.png"));
+	rectangles_.push_back(land);
 
 	// last = player
-	player_.init(*gameState_, { 0,0 }, { 0.02f, 0.1f }, assetManager_->getTextureIndex("../res/img/png/player.png"));
+	player_.init(*gameState_, { 0,0 }, { 0.1f, 0.1f }, assetManager_->getTextureIndex("../res/img/png/player_sheet.png"));
+
 }
 
 /*

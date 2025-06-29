@@ -11,32 +11,37 @@ void Player::init(GameState& gameState, glm::vec2 position, glm::vec2 sizePercen
 	position_ = position;
 	sizePercent_ = sizePercent;
 	textureIndex_ = textureIndex;
+    textureOffset_ = 0.25f;
 
-	// initialize vertices
+	// init tex position
+    texturePosition_ = {0.f, 0.f};
+    textureMirrored_ = false;
+
+    // initialize vertices
 	float xOffset = (sizePercent_.x * 2) * gameState_->spriteScale;
 	float yOffset = (sizePercent_.y * 2) * gameState_->spriteScale;
 
 	// top left
 	vertices_[0].pos = { position_.x, position_.y };
-	vertices_[0].texCoord = { 0, 0 };
+	vertices_[0].texCoord = { 0.f, 0.f };
 	vertices_[0].texIndex = textureIndex_;
 	vertices_[0].interaction = 0;
 
 	// bottom left
 	vertices_[1].pos = { position_.x, position_.y + yOffset };
-	vertices_[1].texCoord = { 0, 1 };
+	vertices_[1].texCoord = { 0.f, 0.25f };
 	vertices_[1].texIndex = textureIndex_;
 	vertices_[1].interaction = 0;
 
 	// top right
 	vertices_[2].pos = { position_.x + xOffset, position_.y };
-	vertices_[2].texCoord = { 1, 0 };
+	vertices_[2].texCoord = { 0.25f, 0.f };
 	vertices_[2].texIndex = textureIndex_;
 	vertices_[2].interaction = 0;
 
 	// bottom right
 	vertices_[3].pos = { position_.x + xOffset, position_.y + yOffset };
-	vertices_[3].texCoord = { 1, 1 };
+	vertices_[3].texCoord = { 0.25f, 0.25f };
 	vertices_[3].texIndex = textureIndex_;
 	vertices_[3].interaction = 0;
 }
@@ -45,6 +50,8 @@ void Player::init(GameState& gameState, glm::vec2 position, glm::vec2 sizePercen
 -----~~~~~=====<<<<<{_UPDATES_}>>>>>=====~~~~~-----
 */
 void Player::update() {
+    updateTextureCoords();
+
     // decceleration x
 	if (noX_ && !stoppedX_) {
         if (velocity_.x < 0.f) {
@@ -157,6 +164,66 @@ void Player::update() {
 	gameState_->needTriangleRemap = true;
 }
 
+void Player::updateTextureCoords() {
+    // TODO relocate textureMirrored_ updates to here (from onKey)
+    switch (movementState_) {
+    case FORWARD:
+        texturePosition_ = {0.f, 0.25f};
+        textureMirrored_ = false;
+        break;
+    case FORWARD_RIGHT:
+        texturePosition_ = {0.75f, 0.f};
+        textureMirrored_ = false;
+        break;
+    case FORWARD_LEFT:
+        texturePosition_ = {0.75f, 0.f};
+        textureMirrored_ = true;
+        break;
+    case DOWN:
+        texturePosition_ = {0.f, 0.f};
+        textureMirrored_ = false;
+        break;
+    case DOWN_RIGHT:
+        texturePosition_ = {0.25f, 0.f};
+        textureMirrored_ = false;
+        break;
+    case DOWN_LEFT:
+        texturePosition_ = {0.25f, 0.f};
+        textureMirrored_ = true;
+        break;
+    case RIGHT:
+        texturePosition_ = {0.5f, 0.f};
+        textureMirrored_ = false;
+        break;
+    case LEFT:
+        texturePosition_ = {0.5f, 0.f};
+        textureMirrored_ = true;
+        break;
+    case STOPPED:
+        texturePosition_ = {0.f, 0.f};
+        textureMirrored_ = false;
+        break; 
+    }
+
+    // update vertices
+    if (textureMirrored_) {
+	    vertices_[0].texCoord = { texturePosition_.x + textureOffset_, texturePosition_.y };
+	    vertices_[1].texCoord = { texturePosition_.x + textureOffset_, texturePosition_.y + textureOffset_ };
+	    vertices_[2].texCoord = { texturePosition_.x, texturePosition_.y };
+	    vertices_[3].texCoord = { texturePosition_.x, texturePosition_.y + textureOffset_ };
+    }
+    else {
+        // top left
+	    vertices_[0].texCoord = { texturePosition_.x, texturePosition_.y };
+	    // bottom left
+	    vertices_[1].texCoord = { texturePosition_.x, texturePosition_.y + textureOffset_ };
+	    // top right
+	    vertices_[2].texCoord = { texturePosition_.x + textureOffset_, texturePosition_.y };
+	    // bottom right
+	    vertices_[3].texCoord = { texturePosition_.x + textureOffset_, texturePosition_.y + textureOffset_ };
+    }
+}
+
 int Player::map(Vertex* mapped) {
 	for (int i = 0; i < 4; i++) {
 		mapped->pos.x = vertices_[i].pos.x; // position x
@@ -194,12 +261,30 @@ void Player::onKey() {
 		acceleration_.y = -PLAYER_ACCELERATION;
 		noY_ = false;
         stoppedY_ = false;
+        if (gameState_->keys.d) {
+            movementState_ = FORWARD_RIGHT;
+        }
+        else if (gameState_->keys.a) {
+            movementState_ = FORWARD_LEFT;
+        }
+        else {
+            movementState_ = FORWARD;
+        }
 	}
 	if (gameState_->keys.s && !gameState_->keys.w) {
 		acceleration_.y = PLAYER_ACCELERATION;
 		noY_ = false;
         stoppedY_ = false;
-	}
+	    if (gameState_->keys.d) {
+            movementState_ = DOWN_RIGHT;
+        }
+        else if (gameState_->keys.a) {
+            movementState_ = DOWN_LEFT;
+        }
+        else {
+            movementState_ = DOWN;
+        }
+    }
     if (!gameState_->keys.w && !gameState_->keys.s) {
 		noY_ = true;
 	}
@@ -211,14 +296,21 @@ void Player::onKey() {
 		acceleration_.x = PLAYER_ACCELERATION;
 		noX_ = false;
         stoppedX_ = false;
+        if (!gameState_->keys.w && !gameState_->keys.s) {
+            movementState_ = RIGHT;
+        }
 	}
 	if (gameState_->keys.a && !gameState_->keys.d) {
 		acceleration_.x = -PLAYER_ACCELERATION;
 		noX_ = false;
         stoppedX_ = false;
+        if (!gameState_->keys.w && !gameState_->keys.s) {
+            movementState_ = LEFT;
+        }
 	}
 	if (!gameState_->keys.a && !gameState_->keys.d) {
 		noX_ = true;
+
 	}
     if (gameState_->keys.a && gameState_->keys.d) {
         stoppedX_ = true;

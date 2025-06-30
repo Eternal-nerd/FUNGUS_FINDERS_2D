@@ -182,20 +182,64 @@ void Player::updateTextureCoords() {
 
     switch (movementState_) {
     case FORWARD:
-        texturePosition_ = {0.f, 0.25f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = { 0.f, 0.75f };
+            break;
+        case 1:
+            texturePosition_ = { 0.25f, 0.75f };
+            break;
+        case 3:
+            texturePosition_ = { 0.5f, 0.75f };
+            break;
+        }
         break;
     case FORWARD_LEFT:
         textureMirrored_ = true;
     case FORWARD_RIGHT:
-        texturePosition_ = {0.75f, 0.f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = { 0.75f, 0.f };
+            break;
+        case 1:
+            texturePosition_ = { 0.75f, 0.25f };
+            break;
+        case 3:
+            texturePosition_ = { 0.75f, 0.5f };
+            break;
+        }
         break;
     case DOWN:
-        texturePosition_ = {0.f, 0.f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = { 0.f, 0.f };
+            break;
+        case 1:
+            texturePosition_ = { 0.f, 0.25f };
+            break;
+        case 3:
+            texturePosition_ = { 0.f, 0.5f };
+            break;
+        }
         break;
     case DOWN_LEFT:
         textureMirrored_ = true;
     case DOWN_RIGHT:
-        texturePosition_ = {0.25f, 0.f};
+        switch (textureStage_) {
+        case 0:
+        case 2:
+            texturePosition_ = { 0.25f, 0.f };
+            break;
+        case 1:
+            texturePosition_ = { 0.25f, 0.25f };
+            break;
+        case 3:
+            texturePosition_ = { 0.25f, 0.5f };
+            break;
+        }
         break;
     case LEFT:
         textureMirrored_ = true;
@@ -206,10 +250,10 @@ void Player::updateTextureCoords() {
             texturePosition_ = {0.5f, 0.f};
             break;
         case 1:
-            texturePosition_ = {0.25f, 0.25f};
+            texturePosition_ = {0.5f, 0.25f};
             break;
         case 3:
-            texturePosition_ = {0.5f, 0.25f};
+            texturePosition_ = {0.5f, 0.5f};
             break;
         }
         break;

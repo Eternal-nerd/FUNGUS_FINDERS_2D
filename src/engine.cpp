@@ -382,8 +382,14 @@ void Engine::createVkDevice() {
         queueCreateInfos.push_back(queueCreateInfo);
     }
 
+    // extra features chain
+    VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeatures = {};
+    dynamicRenderingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR;
+    dynamicRenderingFeatures.dynamicRendering = VK_TRUE;
+
     VkPhysicalDeviceExtendedDynamicState3FeaturesEXT dynamicState3Features = {};
     dynamicState3Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT;
+    dynamicState3Features.pNext = &dynamicRenderingFeatures;
 
     VkPhysicalDeviceVulkan12Features vulkan12Features = {};
     vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;

@@ -33,6 +33,7 @@ private:
 	bool noY_ = true;
     bool stoppedX_ = false;
     bool stoppedY_ = false;
+	bool sprinting_ = false;
     
 	int textureIndex_ = -1;
 

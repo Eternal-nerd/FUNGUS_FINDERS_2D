@@ -106,29 +106,36 @@ void Player::update() {
         velocity_.y = 0.f;
     }
 
+    if (noX_ && noY_) {
+        textureStage_ = 0;
+    }
+
     // calculate velocity
     velocity_ += glm::vec2(acceleration_.x * gameState_->simulationTimeDelta, acceleration_.y * gameState_->simulationTimeDelta);
 
+    // max velocity changes if sprinting
+    float maxVelocity = (sprinting_) ? MAX_PLAYER_VELOCITY * PLAYER_SPRINT_MULTIPLIER : MAX_PLAYER_VELOCITY;
+
     // limit velocity
-    if (velocity_.y > MAX_PLAYER_VELOCITY) {
-		velocity_.y = MAX_PLAYER_VELOCITY;
+    if (velocity_.y > maxVelocity) {
+		velocity_.y = maxVelocity;
     }
-	if (velocity_.y < -MAX_PLAYER_VELOCITY) {
-		velocity_.y = -MAX_PLAYER_VELOCITY;
+	if (velocity_.y < -maxVelocity) {
+		velocity_.y = -maxVelocity;
 	}
 
-   	if (velocity_.x > MAX_PLAYER_VELOCITY) {
-		velocity_.x = MAX_PLAYER_VELOCITY;
+   	if (velocity_.x > maxVelocity) {
+		velocity_.x = maxVelocity;
     }
-	if (velocity_.x < -MAX_PLAYER_VELOCITY) {
-		velocity_.x = -MAX_PLAYER_VELOCITY;
+	if (velocity_.x < -maxVelocity) {
+		velocity_.x = -maxVelocity;
 	}
 
 	// update position based on velocity
 	position_ += glm::vec2(velocity_.x * gameState_->simulationTimeDelta, velocity_.y * gameState_->simulationTimeDelta);
 
     // add position to animation counter
-    animationDistance_ += abs(velocity_.y * gameState_->simulationTimeDelta) + abs(velocity_.x * gameState_->simulationTimeDelta);
+    animationDistance_ += (abs(velocity_.x) >= abs(velocity_.y))  ? abs(velocity_.x * gameState_->simulationTimeDelta) : abs(velocity_.y * gameState_->simulationTimeDelta);
     if (animationDistance_ > PLAYER_ANIMATION_RESET) {
         if (textureStage_ == 3) {
             textureStage_ = 0;
@@ -314,7 +321,9 @@ void Player::scale() {
 	vertices_[3].pos = { position_.x + xOffset, position_.y + yOffset };
 }
 
-void Player::onKey() { 
+void Player::onKey() {
+    sprinting_ = gameState_->keys.shift;
+
 	if (gameState_->keys.w && !gameState_->keys.s) {
 		acceleration_.y = -PLAYER_ACCELERATION;
 		noY_ = false;

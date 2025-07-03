@@ -36,13 +36,14 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 const int MAX_QUADS = 2048;
 const int MAX_LINES = 256;
 const float PLAYER_ACCELERATION = 2.f; 
+const float PLAYER_SPRINT_MULTIPLIER = 1.75f;
 const float PLAYER_DECELERATION = 3.f;
 const float MAX_PLAYER_VELOCITY = 0.5f;
-const float PLAYER_ANIMATION_RESET = 0.1f;
+const float PLAYER_ANIMATION_RESET = 0.08f;
 
 
 // GAME VARIABLES
-const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME };
+const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME };
 
 const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
